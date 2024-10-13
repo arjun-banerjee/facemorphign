@@ -1,0 +1,693 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Face Morphing</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="11eb4c2c-0048-808f-a8a2-c2e27bba23db" class="page sans"><header><h1 class="page-title">Face Morphing</h1><p class="page-description"></p></header><div class="page-body"><h2 id="11eb4c2c-0048-806a-833f-ecabf5076d42" class="">Overview:</h2><p id="11eb4c2c-0048-80be-9dbb-d22069471670" class="">Here, we implement face morphing using only linear algebra — no ML! Then, we use it for cool things, like making GIFs, finding mean population faces, and making caricatures, such as making neutral expression people smile! Then, we try to explore the results of modifying the algorithm, such as trying out different morph techniques (sigmoid and logistic) and changing demographics.</p><h2 id="11eb4c2c-0048-8036-9d2f-c6e092d8def3" class="">Defining Corresponding Points &amp; Mean Faces</h2><p id="11eb4c2c-0048-808f-849e-c1004c0231ae" class="">Because everyone’s facial structures are different, it is necessary to find identify where key facial features are before beginning starting morphing. To do this, we select 38 different points on the face, and then perform Delaunay triangulation to capture triangular regions between the points.</p><p id="11eb4c2c-0048-80ec-99d3-c147aca74765" class="">
+</p><p id="11eb4c2c-0048-80cf-8178-f4f26cd805f0" class="">We then compute the mid way faces using the following algorithm:</p><ol type="1" id="11eb4c2c-0048-80e8-9246-c3220fdb88b7" class="numbered-list" start="1"><li>Compute the average points of the features with <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo stretchy="false">(</mo><msub><mi>P</mi><mn>1</mn></msub><mo>+</mo><msub><mi>P</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\frac{1}{2}(P_{1} + P_{2})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> for each point</li></ol><ol type="1" id="11eb4c2c-0048-801f-92c1-d392aced419c" class="numbered-list" start="2"><li>Find the Delaunay triangulation of these points</li></ol><ol type="1" id="11eb4c2c-0048-809c-beed-d686374c6d04" class="numbered-list" start="3"><li>For each triangle, compute the affine transformation that sends the given triangle to the average warp triangle</li></ol><ol type="1" id="11eb4c2c-0048-8028-8548-fd6ed12f19db" class="numbered-list" start="4"><li>Compute the inverse warp using the inverse of the affine transformation, using polygonal mask and linear interpolation.</li></ol><ol type="1" id="11eb4c2c-0048-80fb-af51-c880fc571375" class="numbered-list" start="5"><li>Add the images by cross dissolving with a factor of <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><span>﻿</span></span></li></ol><p id="11eb4c2c-0048-8015-b0b3-ead24f37299d" class="">Here are the results!  The <mark class="highlight-teal">green </mark><mark class="highlight-default">triangles correspond to the given picture’s triangulation regions, and the </mark><mark class="highlight-blue">blue</mark><mark class="highlight-default"> triangles correspond to the the average of the two picture’s points triangulated — this is shown in the middle pictures. The given image warped to the mean is shown on the right, and then the full mid-way face is shown below.</mark></p><p id="11eb4c2c-0048-8021-9f64-d04c3cbc8840" class=""><strong>Cropped:</strong></p><div id="11eb4c2c-0048-8025-bdba-c6bde58a74fd" class="column-list"><div id="11eb4c2c-0048-80c3-9884-c55d8a84a305" style="width:33.33333333333333%" class="column"><figure id="11eb4c2c-0048-80b0-bfad-db2672eea0db" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/94e5609e-b480-442c-a909-055f257e0054.png"><img style="width:240px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/94e5609e-b480-442c-a909-055f257e0054.png"/></a></figure></div><div id="11eb4c2c-0048-80eb-b855-e8a75721f254" style="width:33.33333333333333%" class="column"><figure id="11eb4c2c-0048-8020-a9e1-e376b5b0283b" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/1fd91389-198b-46be-a951-145cd545f853.png"><img style="width:257.92349726775956px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/1fd91389-198b-46be-a951-145cd545f853.png"/></a></figure></div><div id="11eb4c2c-0048-805b-a935-fceb68013e42" style="width:33.33333333333333%" class="column"><figure id="11eb4c2c-0048-80b9-987c-c4df4550f7c2" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/cd681d15-289e-4fdc-81e9-ae307e8d6a4a.png"><img style="width:256.8888888888889px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/cd681d15-289e-4fdc-81e9-ae307e8d6a4a.png"/></a></figure></div></div><div id="11eb4c2c-0048-80cc-a4eb-e5b57a28998a" class="column-list"><div id="11eb4c2c-0048-80d0-ac77-e961d06aeb89" style="width:33.333333333333336%" class="column"><figure id="11eb4c2c-0048-8069-9705-d519c51dcf1b" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/faabaaca-01f6-423d-bfc6-41fafc57b595.png"><img style="width:256.87671232876716px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/faabaaca-01f6-423d-bfc6-41fafc57b595.png"/></a></figure></div><div id="11eb4c2c-0048-808c-9969-da430bfb9cf0" style="width:33.333333333333336%" class="column"><figure id="11eb4c2c-0048-8054-a3f1-c581f1d7f4d4" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/b9401a45-16a6-4c5f-abc2-c0b2611d71fe.png"><img style="width:255.30054644808743px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/b9401a45-16a6-4c5f-abc2-c0b2611d71fe.png"/></a></figure></div><div id="11eb4c2c-0048-80a2-81a7-edad4409dec7" style="width:33.33333333333333%" class="column"><figure id="11eb4c2c-0048-8033-978a-ce8338b4e154" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/46c29df0-d8ef-491e-8c91-2138daef4e29.png"><img style="width:254.93036211699163px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/46c29df0-d8ef-491e-8c91-2138daef4e29.png"/></a></figure></div></div><figure id="11eb4c2c-0048-80fd-9e84-e539f4415db5" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/87b89767-d213-446c-96be-4b638f0d907c.png"><img style="width:255.4621848739496px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/87b89767-d213-446c-96be-4b638f0d907c.png"/></a></figure><p id="11eb4c2c-0048-8067-a219-fb4aeee59a94" class="">
+</p><p id="11eb4c2c-0048-8000-a85f-fba2883d1b1a" class=""><strong>Uncropped:</strong></p><div id="11eb4c2c-0048-8020-99eb-c42196aef165" class="column-list"><div id="11eb4c2c-0048-8022-ae68-d084ba8ea516" style="width:33.333333333333336%" class="column"><figure id="11eb4c2c-0048-8065-bc48-c96cd6f1ec50" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/28efe43e-cd20-4ea0-866c-cc190ef66702.png"><img style="width:254.4262295081967px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/28efe43e-cd20-4ea0-866c-cc190ef66702.png"/></a></figure></div><div id="11eb4c2c-0048-8090-beac-e0a97d67e9d8" style="width:33.333333333333336%" class="column"><figure id="11eb4c2c-0048-8046-b380-c3d3e256872d" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/ed36796b-97d0-4034-a838-3dfdb96ccf9c.png"><img style="width:256.3487738419618px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/ed36796b-97d0-4034-a838-3dfdb96ccf9c.png"/></a></figure></div><div id="11eb4c2c-0048-8036-9f8c-fb9715bd9130" style="width:33.33333333333333%" class="column"><figure id="11eb4c2c-0048-8047-b882-c4bde0fd9c3e" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/9a09027e-0dbf-431d-b0d4-c772dac26c1e.png"><img style="width:257.23756906077347px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/9a09027e-0dbf-431d-b0d4-c772dac26c1e.png"/></a></figure></div></div><div id="11eb4c2c-0048-80bd-b44a-e32eb12714f5" class="column-list"><div id="11eb4c2c-0048-8012-a0db-e2859cb77dea" style="width:33.333333333333336%" class="column"><figure id="11eb4c2c-0048-8096-8013-f248cd46f37d" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/c69d79a6-f4fe-4022-89db-d43ff3e08b58.png"><img style="width:251.68539325842698px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/c69d79a6-f4fe-4022-89db-d43ff3e08b58.png"/></a></figure></div><div id="11eb4c2c-0048-80a7-99a0-d6e99df5745f" style="width:33.333333333333336%" class="column"><figure id="11eb4c2c-0048-8011-a7f9-f65323a1c798" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/3c43cf0e-c057-4949-be34-b323d3788d3b.png"><img style="width:261.8181818181818px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/3c43cf0e-c057-4949-be34-b323d3788d3b.png"/></a></figure></div><div id="11eb4c2c-0048-8024-b3c1-c3458d0c2072" style="width:33.33333333333333%" class="column"><figure id="11eb4c2c-0048-80a5-bb11-d20488ab7185" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/537762e2-38b0-4fbc-a3f8-ff3075d6dad1.png"><img style="width:254.7486033519553px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/537762e2-38b0-4fbc-a3f8-ff3075d6dad1.png"/></a></figure></div></div><p id="11eb4c2c-0048-801d-8789-d4d3bb340181" class="">
+</p><figure id="11eb4c2c-0048-803b-8b38-e3ec800ddbd9" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/649ed844-9453-4db7-9b95-d1f737601799.png"><img style="width:264.2642642642643px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/649ed844-9453-4db7-9b95-d1f737601799.png"/></a></figure><p id="11eb4c2c-0048-8061-9e3f-ce5c522a60bc" class="">It’s interesting to observe how cropping changes the images — especially the hair!</p><h2 id="11eb4c2c-0048-80c7-89eb-efb8bd49de2a" class="">Part 3: Morphing</h2><p id="11eb4c2c-0048-80bd-9b96-f6f004669aa7" class="">To create a full morph, we simply sweep the cross dissolve range of the pictures from <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span><span>﻿</span></span> to <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span><span>﻿</span></span>following the algorithm that the morph at step <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span><span>﻿</span></span> is equal to <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mi>t</mi><msub><mi>I</mi><mn>1</mn></msub><mo>+</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>t</mi><mo stretchy="false">)</mo><msub><mi>I</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">M(t) = tI_{1} + (1-t)I_{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord mathnormal">t</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>. Here are some results!</p><p id="11eb4c2c-0048-8017-ba8a-ec260598b5f2" class="">Uncropped:                                                                     Cropped:</p><div id="11eb4c2c-0048-802c-be73-fd40c86955be" class="column-list"><div id="11eb4c2c-0048-8018-8c86-df7ffb1c7837" style="width:50%" class="column"><figure id="11eb4c2c-0048-80d7-89b5-cbe0f6ccb5ac" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/arjuntokap.gif"><img style="width:161.49305725097656px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/arjuntokap.gif"/></a></figure></div><div id="11eb4c2c-0048-80e1-806b-c17b4ebc9457" style="width:50%" class="column"><figure id="11eb4c2c-0048-809e-9964-c602cbc2b51c" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/arjuntokap2.gif"><img style="width:330.9809265136719px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/arjuntokap2.gif"/></a></figure></div></div><p id="11eb4c2c-0048-80d1-b70f-d456bdd4d549" class="">
+</p><h2 id="11eb4c2c-0048-805d-b940-c78b7a6e5e48" class="">Part 4: Mean Face of a Population</h2><p id="11eb4c2c-0048-8018-b6d0-cd76004021e8" class="">Using the FEI dataset, which consists of 200 photographs of Brazilians smiling and neutral face, we are able to create the average population faces — both smiling and not! Using their labelings, we are able to create the average point set and triangulation for smiling, neutral, and combined smiling and neutral, and warp people to these facial structures!</p><p id="11eb4c2c-0048-80de-a6c6-d1c78350fce3" class="">Here’s an example:</p><div id="11eb4c2c-0048-8062-8ea4-c57ac7adf784" class="column-list"><div id="11eb4c2c-0048-80b0-9106-f20de9a458b7" style="width:25%" class="column"><figure id="11eb4c2c-0048-80bc-9b5d-d35ec755ba36" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/ee2212ab-c662-4190-a331-36f08e649c47.png"><img style="width:263.26869806094186px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/ee2212ab-c662-4190-a331-36f08e649c47.png"/></a><figcaption>The Original Neutral Face</figcaption></figure><figure id="11eb4c2c-0048-80cb-9f3c-f5a21ee6303a" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/9bd29985-cc4c-4453-a51e-8d602177d91a.png"><img style="width:276.3636363636363px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/9bd29985-cc4c-4453-a51e-8d602177d91a.png"/></a><figcaption>The Original Smiling Face</figcaption></figure><p id="11eb4c2c-0048-800e-b836-eea7a4e751d0" class="">
+</p></div><div id="11eb4c2c-0048-80ca-9dc4-f2581d655fad" style="width:25%" class="column"><figure id="11eb4c2c-0048-808b-89ac-c1679500129e" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/89133ede-14a4-4920-b7b6-129abd685d2c.png"><img style="width:270.2824858757062px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/89133ede-14a4-4920-b7b6-129abd685d2c.png"/></a><figcaption>Neutral → Avg Smiling</figcaption></figure><figure id="11eb4c2c-0048-8067-a27a-ce72a6f3bb3a" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/3b1ae7f9-6a8d-4662-9e60-92eb70a8a5a6.png"><img style="width:265.6267409470752px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/3b1ae7f9-6a8d-4662-9e60-92eb70a8a5a6.png"/></a><figcaption>Smiling → Avg Smiling</figcaption></figure></div><div id="11eb4c2c-0048-8034-8683-c33a243e978b" style="width:25%" class="column"><figure id="11eb4c2c-0048-8061-a9ea-d448f894c8cd" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/36c8e000-2d74-44a9-9f04-081ed68ab553.png"><img style="width:265.1933701657459px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/36c8e000-2d74-44a9-9f04-081ed68ab553.png"/></a><figcaption>Neutral → Avg Neutral</figcaption></figure><figure id="11eb4c2c-0048-8094-b497-f46f4455e825" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/65fc9d60-f0cc-47af-8aa5-558ae3fa62be.png"><img style="width:265.4945054945055px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/65fc9d60-f0cc-47af-8aa5-558ae3fa62be.png"/></a><figcaption>Smiling → Avg Neutral</figcaption></figure></div><div id="11eb4c2c-0048-805f-8765-ff051bc34613" style="width:25%" class="column"><figure id="11eb4c2c-0048-807e-bcbb-d0821d91bcfe" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/c2dec831-90f0-424d-b20a-a858dc22b8f8.png"><img style="width:265.91549295774644px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/c2dec831-90f0-424d-b20a-a858dc22b8f8.png"/></a><figcaption>Neutral → Avg Combined</figcaption></figure><figure id="11eb4c2c-0048-803a-819b-d2bb7dc0e460" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/35df6327-342f-44b1-999d-8a55cc3ce9a7.png"><img style="width:266.9714285714286px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/35df6327-342f-44b1-999d-8a55cc3ce9a7.png"/></a><figcaption>Smiling → Avg Combined</figcaption></figure></div></div><p id="11eb4c2c-0048-80eb-9635-c7b157de2260" class="">Some people won’t stop smiling!</p><div id="11eb4c2c-0048-80fc-9a5f-fdc0a3292eb6" class="column-list"><div id="11eb4c2c-0048-808a-b64b-c9b31b53682d" style="width:25%" class="column"><figure id="11eb4c2c-0048-8078-b948-d05775a903cc" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/4ac979f1-33d3-41d6-93b7-4c0edaff8154.png"><img style="width:265.1933701657459px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/4ac979f1-33d3-41d6-93b7-4c0edaff8154.png"/></a><figcaption>The Original Neutral Face</figcaption></figure><figure id="11eb4c2c-0048-8058-b5ca-cfdff5ffec7f" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/e695f1d1-d65f-4d48-b39e-22ad8e6b8608.png"><img style="width:270.561797752809px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/e695f1d1-d65f-4d48-b39e-22ad8e6b8608.png"/></a><figcaption>The Original Smiling Face</figcaption></figure></div><div id="11eb4c2c-0048-803a-9337-edfcef46e3bf" style="width:25%" class="column"><figure id="11eb4c2c-0048-80c4-90a6-d2f12f1eb7ea" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/667770bc-8dba-4c87-8ba2-63a0b7fa2dba.png"><img style="width:265.91549295774644px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/667770bc-8dba-4c87-8ba2-63a0b7fa2dba.png"/></a><figcaption>Neutral → Avg Smiling</figcaption></figure><figure id="11eb4c2c-0048-804d-afa2-d1f5100b7afd" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/1342cef5-8351-4b8a-943d-0286608b4ed1.png"><img style="width:261.0764872521246px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/1342cef5-8351-4b8a-943d-0286608b4ed1.png"/></a><figcaption>Smiling → Avg Smiling</figcaption></figure><p id="11eb4c2c-0048-80b4-8d22-ffe68c6820dd" class="">
+</p></div><div id="11eb4c2c-0048-8038-85a0-f4e325190a66" style="width:25%" class="column"><figure id="11eb4c2c-0048-80ba-b3b6-cdc84d560c4c" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/a14fc7a8-59c9-4082-902f-353c9308a0f9.png"><img style="width:269.5211267605634px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/a14fc7a8-59c9-4082-902f-353c9308a0f9.png"/></a><figcaption>Neutral → Avg Neutral</figcaption></figure><figure id="11eb4c2c-0048-8008-bbda-d23754524ad8" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/3ede79a2-2bca-472f-8256-3a7e93aadb02.png"><img style="width:273.6363636363636px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/3ede79a2-2bca-472f-8256-3a7e93aadb02.png"/></a><figcaption>Smiling → Avg Neutral</figcaption></figure></div><div id="11eb4c2c-0048-80d2-9770-ed99f7d39590" style="width:25%" class="column"><figure id="11eb4c2c-0048-80fe-824a-fc688e448414" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/0dcea1f6-29b0-4913-be08-a80cca73b86e.png"><img style="width:263.42541436464086px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/0dcea1f6-29b0-4913-be08-a80cca73b86e.png"/></a><figcaption>Neutral → Avg Combined</figcaption></figure><figure id="11eb4c2c-0048-8059-9d71-e6fd08709fd5" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/42e26f75-7e26-4718-988d-ddf55ee18525.png"><img style="width:267.2625698324022px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/42e26f75-7e26-4718-988d-ddf55ee18525.png"/></a><figcaption>Smiling → Avg Combined</figcaption></figure></div></div><p id="11eb4c2c-0048-80c2-a941-efe3dbef5631" class="">We can morph faces, add them, and then find their average to find the mean face of the Brazilian (sample) population smiling, neutral, and combined:</p><div id="11eb4c2c-0048-80c8-b353-f69131d688cf" class="column-list"><div id="11eb4c2c-0048-8078-b2c0-dd2b3f047960" style="width:33.33333333333334%" class="column"><figure id="11eb4c2c-0048-808e-bff6-d406c7b45313" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/cfcde993-63d6-4313-963b-89862f8e9511.png"><img style="width:268.15642458100564px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/cfcde993-63d6-4313-963b-89862f8e9511.png"/></a><figcaption>Average Smiling → General Face</figcaption></figure></div><div id="11eb4c2c-0048-8079-af03-e914f1008f18" style="width:33.33333333333336%" class="column"><figure id="11eb4c2c-0048-80a3-9933-e73897758d0b" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.29.27_PM.png"><img style="width:441.3194580078125px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.29.27_PM.png"/></a><figcaption>Average Smiling → Smiling Face</figcaption></figure></div><div id="11eb4c2c-0048-80b2-8844-c9e4b3724d1a" style="width:33.33333333333333%" class="column"><figure id="11eb4c2c-0048-80bd-b6a8-cb5311caeb4e" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.29.53_PM.png"><img style="width:205.32119750976562px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.29.53_PM.png"/></a><figcaption>Average Smiling → No Smiling Face</figcaption></figure></div></div><div id="11eb4c2c-0048-8004-9b58-e3c2ff753aa6" class="column-list"><div id="11eb4c2c-0048-80a0-b63a-eb8c517ec6e7" style="width:33.333333333333336%" class="column"><figure id="11eb4c2c-0048-8069-a53e-ffcc8634feaf" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.30.30_PM.png"><img style="width:504.00177001953125px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.30.30_PM.png"/></a><figcaption>Average General → General Face</figcaption></figure></div><div id="11eb4c2c-0048-8043-9f20-fc639a313e23" style="width:33.333333333333336%" class="column"><figure id="11eb4c2c-0048-8066-88bb-dbe6dd2405b3" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.30.44_PM.png"><img style="width:441.3194580078125px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.30.44_PM.png"/></a><figcaption>Average General → Smiling Face</figcaption></figure></div><div id="11eb4c2c-0048-802b-abc3-c6713daeec9c" style="width:33.33333333333333%" class="column"><figure id="11eb4c2c-0048-80b0-96f3-dbf43cab1a45" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.30.56_PM.png"><img style="width:205.32119750976562px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.30.56_PM.png"/></a><figcaption>Average General → No Smiling Face</figcaption></figure></div></div><div id="11eb4c2c-0048-8005-8a30-d249c1e47ade" class="column-list"><div id="11eb4c2c-0048-800a-9d55-f7a8b0b2517b" style="width:33.33333333333333%" class="column"><figure id="11eb4c2c-0048-801d-b708-e19f398a4317" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/6a28a51e-bd86-4437-a522-0184923e3a32.png"><img style="width:264.5810055865922px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/6a28a51e-bd86-4437-a522-0184923e3a32.png"/></a><figcaption>Average Overall → General Face</figcaption></figure></div><div id="11eb4c2c-0048-80f7-8ff9-d664b690c066" style="width:33.33333333333334%" class="column"><figure id="11eb4c2c-0048-8060-84d0-d9fd10f297aa" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/f6b21c0e-28cc-40aa-b80f-066354d36ff6.png"><img style="width:263.3707865168539px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/f6b21c0e-28cc-40aa-b80f-066354d36ff6.png"/></a><figcaption>Average Overall → Smiling Face</figcaption></figure></div><div id="11eb4c2c-0048-8051-87ed-e2313f7924b9" style="width:33.33333333333333%" class="column"><figure id="11eb4c2c-0048-80e8-bf5a-e1bbe0ebe05d" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.33.51_PM.png"><img style="width:307.9861145019531px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.33.51_PM.png"/></a><figcaption>Average Overall → No Smiling Face</figcaption></figure></div></div><p id="11eb4c2c-0048-80d7-aacf-f81fb9ffbb69" class="">We can now morph myself to the average Brazillian and vice versa. </p><div id="11eb4c2c-0048-8023-8036-ea258110fde2" class="column-list"><div id="11eb4c2c-0048-8003-b66d-d8247b62b92e" style="width:50%" class="column"><figure id="11eb4c2c-0048-8089-9cdd-e742126bb4c2" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/image.png"><img style="width:250.00001525878906px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/image.png"/></a></figure></div><div id="11eb4c2c-0048-8082-8982-c42e483e4e5b" style="width:50%" class="column"><figure id="11eb4c2c-0048-804d-9669-e8517a279d18" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/arjuntobrazil.jpg"><img style="width:225.9809112548828px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/arjuntobrazil.jpg"/></a></figure></div></div><p id="11eb4c2c-0048-803a-9f3a-f04e6cece73f" class="">Why so much distortion? There’s a few reasons</p><ol type="1" id="11eb4c2c-0048-80f1-aad2-c81c7f4ee4ed" class="numbered-list" start="1"><li>The average Brazilian seems to have no hair — likely because there is a blending of many hairstyles. I have a LOT of hair. </li></ol><ol type="1" id="11eb4c2c-0048-8041-b265-da4e4466cf37" class="numbered-list" start="2"><li>The average Brazilian photo leave a cutoff right above their forehead. Whereas my points extend to my afro. As such, the brazil to Arjun warp has to interpolate on points that don’t exist by expanding the Brazilian’s forehead into triangles that represent my afro.</li></ol><ol type="1" id="11eb4c2c-0048-80ce-a855-e73c9ba5f1c0" class="numbered-list" start="3"><li>The average Brazilian is smiling — I was not. And they smile with teeth! As such, their mouth is significantly bigger than mine. Such happy folk : )</li></ol><ol type="1" id="11eb4c2c-0048-80dc-a70d-f9ba777dccd9" class="numbered-list" start="4"><li>The Brazilians were closer to the camera than me, so their heads are likely bigger.</li></ol><h2 id="11eb4c2c-0048-8053-94a9-e7edcf69ac94" class="">Part 5: Caricatures</h2><p id="11eb4c2c-0048-802b-8d37-fd0cf4aa454c" class="">We build a caricature by computing: <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo stretchy="false">(</mo><mi>m</mi><mi>e</mi><mo>−</mo><mi>m</mi><mi>e</mi><mi>a</mi><mi>n</mi><mo stretchy="false">)</mo><mo>+</mo><mi>m</mi><mi>e</mi><mi>a</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">\alpha(me-mean) + mean</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mopen">(</span><span class="mord mathnormal">m</span><span class="mord mathnormal">e</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">m</span><span class="mord mathnormal">e</span><span class="mord mathnormal">an</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span><span class="mord mathnormal">e</span><span class="mord mathnormal">an</span></span></span></span></span><span>﻿</span></span> where <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\alpha &lt; 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span><span>﻿</span></span> exaggerate my expression and <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>&gt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\alpha &gt; 1 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span><span>﻿</span></span> exagerate the means expressions. We can clearly see some caricatures of either me or the mean in the following images:</p><div id="11eb4c2c-0048-8066-b353-c997033e9d2c" class="column-list"><div id="11eb4c2c-0048-80c2-b575-fa4c1a7f8330" style="width:25%" class="column"><figure id="11eb4c2c-0048-8077-b423-e8d249a95441" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/cari0.1.jpg"><img style="width:250.00001525878906px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/cari0.1.jpg"/></a><figcaption>0.1</figcaption></figure></div><div id="11eb4c2c-0048-800e-86e8-e3c635f325f4" style="width:25%" class="column"><figure id="11eb4c2c-0048-804b-b812-f7831d9214b8" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/cari0.5.jpg"><img style="width:250.00001525878906px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/cari0.5.jpg"/></a><figcaption>0.5</figcaption></figure></div><div id="11eb4c2c-0048-8057-bb8d-cd26d7b4792b" style="width:25%" class="column"><figure id="11eb4c2c-0048-80d9-9304-ca2bc68e594b" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/cari1.jpg"><img style="width:205.32119750976562px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/cari1.jpg"/></a><figcaption>1</figcaption></figure></div><div id="11eb4c2c-0048-8030-aae6-f7d382a664c7" style="width:25%" class="column"><figure id="11eb4c2c-0048-8046-a234-d210c4c4db58" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/cari1.5.jpg"><img style="width:142.4913330078125px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/cari1.5.jpg"/></a><figcaption>1.5</figcaption></figure></div></div><p id="11eb4c2c-0048-802d-bd57-dc3b797e21f2" class="">Once again, distortion is likely for the above reasons!</p><h2 id="11eb4c2c-0048-8054-b8c6-fd71c8339620" class="">Bells and Whistles:</h2><h3 id="11eb4c2c-0048-80d1-8857-cee0d6e0f3de" class=""><span style="border-bottom:0.05em solid">Exploring Alternate Sweeps</span></h3><p id="11eb4c2c-0048-80a4-a46d-da03a04027a2" class="">We can also try to change the functions we use for morphing — we’ll try three different sweeping techniques for the equation <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><msub><mi>I</mi><mn>1</mn></msub><mo>+</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><msub><mi>I</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">M(t) = f(t)I_{1} + (1-f(t))I_{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">))</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></p><figure id="11eb4c2c-0048-80ba-9d72-d6b3fd17ae4f" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.01.04_PM.png"><img style="width:192px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_9.01.04_PM.png"/></a></figure><ol type="1" id="11eb4c2c-0048-80b3-ac75-f5eca362b12d" class="numbered-list" start="1"><li><mark class="highlight-blue">Linear</mark> — <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">f(t) = t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span><span>﻿</span></span></li></ol><ol type="1" id="11eb4c2c-0048-8089-9006-eb3e43391d18" class="numbered-list" start="2"><li><mark class="highlight-purple">A shifted sigmoid </mark>that maps <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">]</mo><mo>→</mo><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">]</mo><mo separator="true">,</mo><mtext> </mtext><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mo>−</mo><mn>16</mn><mo stretchy="false">(</mo><mi>t</mi><mo>−</mo><mn>0.5</mn><mo stretchy="false">)</mo></mrow></msup></mrow></mfrac><mo>−</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mn>8</mn></msup></mrow></mfrac><mo stretchy="false">)</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>−</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mn>8</mn></msup></mrow></mfrac></mrow></mfrac><mtext> </mtext></mrow><annotation encoding="application/x-tex">f |[0,1] \rightarrow[0,1],\space f(t) = (\frac{1}{1 + e^{-16(t - 0.5)}} - \frac{1}{1 + e^{8}})\frac{1}{1 - \frac{1}{1 + e^{8}}} \space </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord">∣</span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2889em;vertical-align:-0.4438em;"></span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.6146em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mbin mtight">+</span><span class="mord mtight"><span class="mord mathnormal mtight">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.822em;"><span style="top:-2.822em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5357em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">16</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">0.5</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4438em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.6335em;vertical-align:-0.7884em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mbin mtight">+</span><span class="mord mtight"><span class="mord mathnormal mtight">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7463em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">8</span></span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4033em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.599em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mbin mtight">−</span><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8443em;"><span style="top:-2.5062em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mbin mtight">+</span><span class="mord mtight"><span class="mord mathnormal mtight">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9384em;"><span style="top:-2.9384em;margin-right:0.1em;"><span class="pstrut" style="height:2.6444em;"></span><span class="mord mtight"><span class="mord mtight">8</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.2255em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.384em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.5533em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7884em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace"> </span></span></span></span></span><span>﻿</span></span></li></ol><ol type="1" id="11eb4c2c-0048-8057-b453-db85c5c5c27f" class="numbered-list" start="3"><li> <mark class="highlight-red">Logistic</mark> that maps <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">]</mo><mo>→</mo><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">]</mo><mo separator="true">,</mo><mtext> </mtext><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>1000</mn><mi>x</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mrow><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>1001</mn><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">f |[0,1] \rightarrow[0,1], \space f(x) = \frac{\log(1000 x + 1)}{\log(1001)} </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord">∣</span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.53em;vertical-align:-0.52em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">l</span><span class="mtight">o</span><span class="mtight" style="margin-right:0.01389em;">g</span></span><span class="mopen mtight">(</span><span class="mord mtight">1001</span><span class="mclose mtight">)</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">l</span><span class="mtight">o</span><span class="mtight" style="margin-right:0.01389em;">g</span></span><span class="mopen mtight">(</span><span class="mord mtight">1000</span><span class="mord mathnormal mtight">x</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.52em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><span>﻿</span></span></li></ol><p id="11eb4c2c-0048-808e-9242-e5746e37ab27" class="">We intentionally drop the correspondance points down to 25 to see if any of these functions can drastically increase the smoothness.</p><p id="11eb4c2c-0048-80dd-92f1-d7338eae95bb" class="">
+</p><div id="11eb4c2c-0048-80fc-ad80-cbb4c78fba32" class="column-list"><div id="11eb4c2c-0048-80be-bdeb-fe9bebd38268" style="width:33.333333333333336%" class="column"><figure id="11eb4c2c-0048-80aa-9cf6-ff5456b285c4" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/arjuntokaplinear.gif"><img style="width:225.9809112548828px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/arjuntokaplinear.gif"/></a><figcaption>Linear</figcaption></figure></div><div id="11eb4c2c-0048-80ff-b2d8-e09632cd0602" style="width:33.33333333333333%" class="column"><figure id="11eb4c2c-0048-803f-a9c4-dd6af2ab4927" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/arjuntokapsig.gif"><img style="width:205.32119750976562px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/arjuntokapsig.gif"/></a><figcaption>Sigmoid</figcaption></figure></div><div id="11eb4c2c-0048-80cb-86f2-d30741a156e8" style="width:33.333333333333336%" class="column"><figure id="11eb4c2c-0048-80ab-bd96-f981606734ae" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/arjuntokaplogistic.gif"><img style="width:330.9809265136719px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/arjuntokaplogistic.gif"/></a><figcaption>Logistics</figcaption></figure></div></div><p id="11eb4c2c-0048-80e4-a3fc-c147002364c4" class="">We see some observation of changed smoothness, but most of the change is simply what face gets spent more time on. </p><h3 id="11eb4c2c-0048-8039-a210-fd2eea622129" class=""><span style="border-bottom:0.05em solid">Demographics</span></h3><p id="11eb4c2c-0048-800f-8fe5-c6836a9f897b" class="">Let’s try to make me a Russian!</p><div id="11eb4c2c-0048-80c5-aa55-f1558a205bb9" class="column-list"><div id="11eb4c2c-0048-808e-95b7-ef813ec19108" style="width:50%" class="column"><figure id="11eb4c2c-0048-8040-a8c9-e8f5ca96b774" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_11.14.14_PM.png"><img style="width:370.0000305175781px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_11.14.14_PM.png"/></a></figure></div><div id="11eb4c2c-0048-80ec-8e93-eb0163a5f3ba" style="width:50%" class="column"><figure id="11eb4c2c-0048-80b4-9bd1-e38ce9df6cda" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_11.14.22_PM.png"><img style="width:330.9809265136719px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_11.14.22_PM.png"/></a></figure></div></div><p id="11eb4c2c-0048-808e-9b19-d121f4a47e7c" class="">
+</p><div id="11eb4c2c-0048-80a2-81a9-f21a08c785e8" class="column-list"><div id="11eb4c2c-0048-80bf-a298-e99947b1a8ce" style="width:33.333333333333336%" class="column"><figure id="11eb4c2c-0048-805b-a013-d92e2c951c29" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_11.17.20_PM.png"><img style="width:192px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/Screenshot_2024-10-12_at_11.17.20_PM.png"/></a><figcaption>Shape</figcaption></figure></div><div id="11eb4c2c-0048-800b-a729-df88de5f9ced" style="width:33.33333333333334%" class="column"><figure id="11eb4c2c-0048-8081-aeca-ff297cf2d33d" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/1cffc37c-abdb-4846-bc8c-32baf39ff637.png"><img style="width:200.11267605633805px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/1cffc37c-abdb-4846-bc8c-32baf39ff637.png"/></a><figcaption>Appearance</figcaption></figure></div><div id="11eb4c2c-0048-804e-a821-c86195ee7d76" style="width:33.33333333333333%" class="column"><figure id="11eb4c2c-0048-8097-b407-d7b07c0e2da2" class="image"><a href="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/440d2647-1829-4b5e-83a6-68df9c37904a.png"><img style="width:198.18181818181816px" src="Face%20Morphing%2011eb4c2c0048808fa8a2c2e27bba23db/440d2647-1829-4b5e-83a6-68df9c37904a.png"/></a><figcaption>Both</figcaption></figure><p id="11eb4c2c-0048-80ff-816a-d9a54fdb271d" class="">
+</p></div></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
